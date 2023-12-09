@@ -1,0 +1,182 @@
+Bonjour à tous,
+Voici  les TODO Technique. à lire attentivement. 
+
+Session principale : Projet (examen)
+Session de rattrapage : Projet (examen), ce n'est pas nécessairement le même projet. 
+
+Remarques : 
+
+   -  Étape 1  : Créer un Répo GIT pour l'application Spring et m'inviter sur GitHub ou GitLab. 
+
+                       https://docs.google.com/spreadsheets/d/1DYyJXpwO-1RqcF2PHWLiuTSFsfO9mwKF/edit#gid=1939203349
+
+
+Formats à suivre : 
+Les étudiants doivent suivre des formats précis pour la gestion de leurs projets :
+- Chacun travaille sur sa machine. L’adresse MAC sera récupérée la veille de la validation.
+ 
+a. Git :Le nom du repo Git doit suivre le format suivant :
+classe_groupe_nomProjet
+exemple : 5SIM1-G1-nomProjet
+
+Le nom de la branche Git doit suivre le format
+suivant : nomprenom_classe_groupe
+exemple : FoulenBENFOULEN-5SIM1-G1
+
+b. Livrable : Le nom du livrable doit être
+sous la forme classe-groupe-nomProjet.
+exemple : 5SIM1-G1-nomProjet
+
+c. Image Docker : Le nom de l'image Docker
+doit suivre le format :
+nomprenom_groupe_nomProjet.
+exemple : FoulenBENFOULEN-5SIM1-G1-nomProjet
+
+       
+   -  Étape 2  : Chaque étudiant travaille le logging et les tests unitaires de son module l'application Spring  (Categorie, Facture,  
+                       Produit,etc..). 
+                        https://drive.google.com/file/d/1Dv6bwOS_HP5LSi7jvwQcmQTm5m8pOCjT/view?usp=sharing
+                        Slides Test 
+                         https://drive.google.com/file/d/1DE-p80QXuh3jCK0Zjh0uBvEs-NH4cX_q/view
+                       - Il faut travailler 2 classes de test par chaque étudiant (avec et sans les mock). 
+                          voir (🖊️Exemple Méthode de test) sur classroom. 
+
+                         
+   -  Étape 3  : Installer VirtualBox et Vagrant 
+                       
+                       - Augmenter la taille de la RAM à 3 ou 4 sur le fichier vagrant file et ce pour qu'on puisse lancer après Sonar et Nexus 
+                         ensemble. 
+                       - Si besoin d'une adresse ip qui ne change pas, vous pouvez utiliser private network sur vagrant file.   
+  -   Étape 4:     Installer Jenkins dans Ubuntu
+
+Si problème:
+echo "######## Installing Jenkins #########"
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+sudo apt update
+sudo apt install jenkins
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+
+
+ - Etape 5 : Installer Docker et les conteneurs (SonarQube, Nexus, Grafana, Prometheus)
+
+
+echo "######## Installing docker #########"
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+"deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+"$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo service docker start
+sudo service docker enable
+
+
+echo "######## Running container sonarqube #########"
+docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube    (accès  http://192.168.1.19:9000)
+
+lancer les analyses Sonar sur un projet Spring boot (voir Slide SonarQube)
+
+echo "######## Running container grafana #########"
+docker run -d --name grafana -p 3000:3000 grafana/grafana                                    (accès   http://192.168.1.19:3000/)
+
+
+docker run -d -p 8081:8081 --name nexus sonatype/nexus3                              (accès  http://192.168.1.19:8081/)
+chmod sudo chmod 666 /var/run/docker.sock
+docker run -d --name prometheus -p 9090:9090 prom/prometheus
+
+Installer docker pipeline plugin sur Jenkins
+
+
+                   démo docker 1
+                   démo docker 2
+                   démo docker 3
+
+
+          Pipeline complète (exemple)
+          https://dzone.com/articles/building-docker-images-to-docker-hub-using-jenkins   (à enrichir)
+          Il faut tester toutes les commandes sur console puis les mettre dans la PipeLine
+
+  -   Étape 6: Mise en place de Nexus dans un conteneur Docker   ( Upload du .jar sur Nexus version Snapshot et version Release)
+       https://drive.google.com/file/d/1FqR1X4lki82eQdw9KQ71Y2CDvXRfZ60a/view
+
+   -   Étape 7: Mise en place de Sonar dans un conteneur Docker  et lancer les analyses Sonar sur un projet Spring boot
+       https://drive.google.com/file/d/1IbNmuX2TvU-0QxMocyX3YOiQQzJ50c9E/view
+ 
+
+      
+
+  -   Étape 8: Mise en place de Grafana & Prometheus dans 2 conteneurs
+
+          https://drive.google.com/file/d/11jt7N_PU9dYOg-8vavFqVuRt_5Bf9VFy/view?usp=sharing
+
+           Étape 9:
+      -   Docker Compose pour liaison Tomcat & Mysql  Ou bien juste à mettre l'adresse ip du conteneur MySQL dans le fichier application.properties.   (voir le cours et la capture d'écran sur classroom). 
+
+
+
+
+-  Installation de Docker Compose :
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+Créer un fichier 
+docker-compose.yml
+dockercompose up //à mettre au niveau du pipeline 
+
+
+
+stage('Docker Compose Up') {
+steps {
+script {
+// Exécutez docker-compose up
+sh "docker-compose up -d"
+}
+}
+
+- Tester sur postman ou swagger (c'est obligatoire) 
+
+si mvn test sur jenkins retourne 0 tests, ajouter cette dépendance maven :
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>2.14.1</version>
+<configuration>
+<includes>
+<include>**/*Test.java</include>
+</includes>
+</configuration>
+</plugin>
+
+
+
+SonarQube (à faire attention) 
+coverage(jacoco), dépendance Maven
+optional
+DTO et les mappers
+
+
+
+Excellence: 
+Améliorations possibles : - How to Configure Email Notification in Jenkins?
+https://www.360logica.com/blog/email-notification-in-jenkins/
+- webhook - Nexus distant - Jenkins distant - ngrok - Eviter de faire des modifications le jour de la validation (ni suppression de dossiers
+ni modification au niveau des fichiers) - IaC (Infrastructure as a Code). Vous pouvez utiliser Terraform pour automatiser
+la configuration des conteneurs Docker et Ansible pour automatiser la
+configuration des outils dans les conteneurs. - Vous pouvez transformer le projet Spring en un projet en microservices.
+
+https://drive.google.com/file/d/1Dv6bwOS_HP5LSi7jvwQcmQTm5m8pOCjT/view
+Jmeter
+        
+Bon courage.
+Thouraya.
